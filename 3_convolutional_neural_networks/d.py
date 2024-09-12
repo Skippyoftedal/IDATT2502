@@ -20,7 +20,7 @@ y_train[torch.arange(mnist_train.targets.shape[0]), mnist_train.targets] = 1  # 
 
 print(f"x_train shape: {x_train.shape}")
 
-mnist_test = torchvision.datasets.FashionMNIST('../fashion', train=False, download=True)
+mnist_test = torchvision.datasets.FashionMNIST('../data', train=False, download=True)
 x_test = mnist_test.data.reshape(-1, 1, 28, 28).float().to(device)  # Move data to GPU
 
 print(f"x_test shape: {x_test.shape}")
