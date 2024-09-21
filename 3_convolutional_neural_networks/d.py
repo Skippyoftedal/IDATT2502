@@ -1,3 +1,5 @@
+import time
+
 import torch
 import torch.nn as nn
 import torchvision
@@ -6,12 +8,11 @@ import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-    print('CUDA is available, using GPU')
-else:
-    device = torch.device("cpu")
-    print('CUDA is not available, using CPU')
+from utility.deviceUtility import get_best_available_device
+
+# Check for CUDA availability
+device = get_best_available_device()
+
 
 mnist_train = torchvision.datasets.FashionMNIST('../data', train=True, download=True)
 x_train = mnist_train.data.reshape(-1, 1, 28, 28).float().to(device)  # Move data to GPU
@@ -36,7 +37,6 @@ x_test = (x_test - mean) / std
 BATCHES = 600
 x_train_batches: tuple[Tensor, ...] = torch.split(x_train, BATCHES)
 y_train_batches: tuple[Tensor, ...] = torch.split(y_train, BATCHES)
-
 
 class ConvolutionalNeuralNetworkModel(nn.Module):
     def __init__(self):
@@ -94,7 +94,11 @@ optimizer = torch.optim.Adam(model.parameters(), 0.001)
 
 accuracies = []
 print("Starting training\n")
-for epoch in range(20):
+
+start_time = time.time()
+
+
+for epoch in range(10):
     for batch in range(len(x_train_batches)):
         x_batch = x_train_batches[batch]
         y_batch = y_train_batches[batch]
@@ -105,6 +109,9 @@ for epoch in range(20):
     ac = model.accuracy(x_test, y_test).item()
     accuracies.append(ac)
     print(f"accuracy = {ac}")
+end_time = time.time()
+
+print(f"Took a total of {end_time - start_time}")
 
 maxVal = max(accuracies)
 print(f"\nThe max accuracy is {maxVal}\n")
@@ -125,6 +132,20 @@ plt.show()
 
 
 """
-Diverse forsøk
+beste forsøk
 0.9114999771118164
+
+
+vanlig
+accuracy = 0.8618000149726868
+accuracy = 0.881600022315979
+accuracy = 0.890500009059906
+accuracy = 0.8991000056266785
+
+
+
+tid brukt på 10 epochs
+vanlig:
+mps: 41.79736280441284 S
+cpu: 374.88060212135315 S
 """

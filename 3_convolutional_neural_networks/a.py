@@ -2,13 +2,10 @@ import torch
 import torch.nn as nn
 import torchvision
 
+from utility.deviceUtility import get_best_available_device
+
 # Check for CUDA availability
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-    print('CUDA is available, using GPU')
-else:
-    device = torch.device("cpu")
-    print('CUDA is not available, using CPU')
+device = get_best_available_device()
 
 # Load observations from the MNIST dataset. The observations are divided into a training set and a test set
 mnist_train = torchvision.datasets.MNIST('../data', train=True, download=True)
@@ -79,3 +76,6 @@ for epoch in range(20):
         optimizer.zero_grad()  # Clear gradients for next step
 
     print(f"accuracy = {model.accuracy(x_test, y_test).item()}")
+
+# accuracy = 0.9708999991416931
+# accuracy = 0.9811999797821045

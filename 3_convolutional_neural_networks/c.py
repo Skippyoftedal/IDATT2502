@@ -3,12 +3,10 @@ import torch.nn as nn
 import torchvision
 from functorch.dim import Tensor
 
-if torch.cuda.is_available():
-    device = torch.device("cuda")
-    print('CUDA is available, using GPU')
-else:
-    device = torch.device("cpu")
-    print('CUDA is not available, using CPU')
+from utility.deviceUtility import get_best_available_device
+
+# Check for CUDA availability
+device = get_best_available_device()
 
 mnist_train = torchvision.datasets.MNIST('../data', train=True, download=True)
 x_train = mnist_train.data.reshape(-1, 1, 28, 28).float().to(device)  # Move data to GPU
@@ -82,7 +80,7 @@ class ConvolutionalNeuralNetworkModel(nn.Module):
 model = ConvolutionalNeuralNetworkModel().to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), 0.0001)
-
+#søk opp scheduler
 
 accuracies = []
 for epoch in range(20):
