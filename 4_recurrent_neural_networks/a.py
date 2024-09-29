@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
         if epoch % 100 == 0:
             model.reset(batch_size=1)
-            text = ' '
+            text = ' h'
 
             input_tensor = torch.tensor([[char_encodings[0]]], dtype=torch.float32).to(calc_device)
             for _ in range(50):
